@@ -84,8 +84,16 @@ def complete(task_nums: list[int]) -> None:
 
 
 @app.command()
-def in_progress(task_nums: list[int]) -> None:
-    pass
+def progress(task_nums: list[int]) -> None:
+    update_status('in progress', task_nums)
+    display()
+
+
+@app.command()
+def incomplete(task_nums: list[int]) -> None:
+    update_status('incomplete', task_nums)
+    display()
+
 
     
 if __name__ == "__main__":
