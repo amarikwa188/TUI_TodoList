@@ -63,19 +63,19 @@ def add(tasks: list[str]) -> None:
             print(f"\ntask index {index} is not a valid task\n")
     display()
 
+
 def update_status(stat: str, nums: list[int]) -> None:
     data: list[str] = load_data()
 
     for index, task in enumerate(data, 1):
         if index in nums:
-            info, status, time = task.split("::")
-            new_status: str = stat
-            new_task: str = '::'.join([info, new_status, time])
+            info, _, time = task.split("::")
+            new_task: str = '::'.join([info, stat, time])
 
-            data: list[str] = load_data()
             del data[index-1]
             data.insert(index-1, new_task)
             save_data(data)
+
 
 @app.command()
 def complete(task_nums: list[int]) -> None:
@@ -94,6 +94,22 @@ def incomplete(task_nums: list[int]) -> None:
     update_status('incomplete', task_nums)
     display()
 
+
+@app.command()
+def edit(task_num: int, new_info: str) -> None:
+    data: list[str] = load_data()
+
+    for index, task in enumerate(data, 1):
+        if index == task_num:
+            _, status, time = task.split("::")
+            new_task: str = '::'.join([new_info, status, time])
+            
+            del data[index-1]
+            data.insert(index-1, new_task)
+            save_data(data)
+            break
+
+    display()
 
     
 if __name__ == "__main__":
