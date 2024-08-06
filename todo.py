@@ -49,6 +49,7 @@ def display() -> None:
         info, status, time = task.split("::")
         table.add_row(str(index), info, status, time)
 
+    print()
     console.print(table)
 
 
@@ -60,7 +61,7 @@ def add(tasks: list[str]) -> None:
             new_task: str = f"{task}::incomplete::{date.today()}"
             save_task(new_task)
         else:
-            print(f"\ntask index {index} is not a valid task\n")
+            print(f"[red]error[/red]::invalid entry for task index {index}")
     display()
 
 
@@ -111,6 +112,22 @@ def edit(task_num: int, new_info: str) -> None:
 
     display()
 
+
+@app.command()
+def delete(task_nums: list[int]) -> None:
+    data: list[int] = load_data()
+
+    for index in task_nums:
+        if index > len(data): 
+            print(f"[red]error[/red]::invalid task number: {index}")
+        else: 
+            data[index-1] = None
+
+    data = [x for x in data if x]
+    save_data(data)
+    display()
+
     
 if __name__ == "__main__":
+    print()
     app()
