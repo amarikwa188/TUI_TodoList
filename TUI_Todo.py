@@ -5,16 +5,16 @@ from rich.console import Console
 from datetime import date
 import json
 
-app: Typer = Typer()    
+app: Typer = Typer(no_args_is_help=True)    
 
 tasks: list[str] = []
 
-table: Table = Table(padding=(1))
+table: Table = Table(show_lines=True, header_style="on blue")
 
 table.add_column("ID", justify="center", width=3)
-table.add_column("Task", width=30)
-table.add_column("Status", justify="center", no_wrap=True)
-table.add_column("Date Created", justify="center", no_wrap=True)
+table.add_column("TASK", width=30)
+table.add_column("STATUS", justify="center", no_wrap=True)
+table.add_column("DATE CREATED", justify="center", no_wrap=True)
 
 console: Console = Console()
 
@@ -40,6 +40,7 @@ def load_tasks() -> list[str]:
 
 @app.command()
 def display() -> None:
+    "Display a table of all tasks."
     data: list[str] = load_tasks()
 
     for index, task in enumerate(data, 1):
@@ -50,11 +51,12 @@ def display() -> None:
 
 
 @app.command()
-def add(task: str) -> None:
+def add(task: str, show:bool=True) -> None:
+    "Add a task to the manager."
     new_todo: str = f"{task}::incomplete::{date.today()}"
     tasks.append(new_todo)
     save_task(new_todo)
-    display()
+    if show: display()
 
 
 if __name__ == "__main__":
