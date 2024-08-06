@@ -65,17 +65,20 @@ def add(tasks: list[str]) -> None:
     display()
 
 
-def update_status(stat: str, nums: list[int]) -> None:
+def update_status(stat: str, task_nums: list[int]) -> None:
     data: list[str] = load_data()
-
-    for index, task in enumerate(data, 1):
-        if index in nums:
+    length: int = len(data)
+    for index in task_nums:
+        if index > length or index < 1:
+            print(f"[red]error[/red]::invalid task number: {index}")
+        else:
+            task: str = data[index-1]
             info, _, time = task.split("::")
             new_task: str = '::'.join([info, stat, time])
 
             del data[index-1]
             data.insert(index-1, new_task)
-            save_data(data)
+    save_data(data)
 
 
 @app.command()
@@ -116,9 +119,9 @@ def edit(task_num: int, new_info: str) -> None:
 @app.command()
 def delete(task_nums: list[int]) -> None:
     data: list[int] = load_data()
-
+    length: int = len(data)
     for index in task_nums:
-        if index > len(data): 
+        if index > length or index < 1: 
             print(f"[red]error[/red]::invalid task number: {index}")
         else: 
             data[index-1] = None
