@@ -53,14 +53,40 @@ def display() -> None:
 
 
 @app.command()
-def add(task: str) -> None:
-    task = task.strip()
-    if task:
-        new_task: str = f"{task}::incomplete::{date.today()}"
-        save_task(new_task)
-        display()
-    else:
-        print("\nEnter a valid task")
+def add(tasks: list[str]) -> None:
+    for index, task in enumerate(tasks):
+        task = task.strip()
+        if task:
+            new_task: str = f"{task}::incomplete::{date.today()}"
+            save_task(new_task)
+        else:
+            print(f"\ntask index {index} is not a valid task\n")
+    display()
+
+def update_status(stat: str, nums: list[int]) -> None:
+    data: list[str] = load_data()
+
+    for index, task in enumerate(data, 1):
+        if index in nums:
+            info, status, time = task.split("::")
+            new_status: str = stat
+            new_task: str = '::'.join([info, new_status, time])
+
+            data: list[str] = load_data()
+            del data[index-1]
+            data.insert(index-1, new_task)
+            save_data(data)
+
+@app.command()
+def complete(task_nums: list[int]) -> None:
+    update_status('complete', task_nums)
+    display()
+
+
+@app.command()
+def in_progress(task_nums: list[int]) -> None:
+    pass
+
     
 if __name__ == "__main__":
     app()
